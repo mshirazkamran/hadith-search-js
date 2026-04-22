@@ -82,4 +82,4 @@ Expected response:
 {"status":"working"}
 ```
 
-If you see `{"status":"working"}` — the server is up. ✅
+If you see `{"status":"working"}` — the server is up. 
