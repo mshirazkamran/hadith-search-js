@@ -1,0 +1,28 @@
+{
+  "name": "hadith-search",
+  "version": "0.0.1",
+  "description": "Hadith searching App",
+  "license": "ISC",
+  "author": "shiraz, shah",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "swagger": "node ./swagger.js"
+  },
+  "dependencies": {
+    "@google/genai": "^1.50.1",
+    "@qdrant/js-client-rest": "^1.17.0",
+    "argon2": "^0.44.0",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "fastembed": "^1.14.4",
+    "groq-sdk": "^1.1.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.5.0",
+    "nodemon": "^3.1.14"
+  },
+  "devDependencies": {
+    "swagger-autogen": "^2.23.7"
+  }
+}

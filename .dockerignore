@@ -1,0 +1,39 @@
+# Git
+.git
+.gitignore
+
+# Agent / AI tooling
+.agent/
+.gemini/
+
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.*
+
+# Fastembed model cache
+local_cache/
+
+# Legacy Python code
+python_code/
+
+# Generated / docs
+swagger-output.json
+api-client-helper.md
+endpoints.spec.md
+implementation_guide.md
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker (don't copy itself)
+.dockerignore
+Dockerfile
+docker-compose.yml
