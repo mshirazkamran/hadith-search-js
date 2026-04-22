@@ -10,22 +10,27 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-// CORS
+
 app.use((req, res, next) => {
   const allowed = [
-    "https://thehadith.netlify.app",
+    "https://thehadith.netlify.app", // deployed on my VPS
     "http://localhost:3000",
     "http://localhost:5173",
   ];
+  
   const origin = req.headers.origin;
   if (allowed.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
+
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  if (req.method === "OPTIONS") return res.sendStatus(204);
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
   next();
 });
+
 
 // Routes
 app.get("/", (req, res) => res.json({ status: "working" }));
@@ -33,7 +38,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1", searchRouter);
 
-// Global error handler
+// main error handler
 app.use((err, req, res, _next) => {
   console.error(err);
   res.status(err.status || 500).json({ error: err.message || "Internal server error." });
