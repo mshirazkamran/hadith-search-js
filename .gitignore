@@ -56,7 +56,7 @@ Thumbs.db
 local_cache/
 
 # Generated files
-swagger-output.json
+# swagger-output.json
 
 # Legacy Python code
 python_code/
