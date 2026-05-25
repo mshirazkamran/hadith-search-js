@@ -3,7 +3,7 @@
 docker compose --env-file .env up -d;
 
 echo "Docker container started"
-sleep 5  # Give MongoDB time to initialize
+sleep 8  # give time to mongodbb time to initialize properly
 
 echo "Starting Express App"
 
