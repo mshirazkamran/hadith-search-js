@@ -8,6 +8,8 @@ jspm_packages/
 .env.development.local
 .env.test.local
 .env.production.local
+.env.shiraz
+.env.ok
 
 # Logs
 logs
@@ -58,3 +60,11 @@ swagger-output.json
 
 # Legacy Python code
 python_code/
+
+
+information.md
+implementation_guide.md
+api-client-helper.md
+endpoints.spec.md
+entrypoint.sh
+

@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema(
     },
     is_verified: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     is_active: {
       type: Boolean,
@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
   },
-  { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
+  { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } },
 );
 
 userSchema.pre("save", async function () {

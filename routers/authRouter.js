@@ -17,7 +17,7 @@ function signAccessToken(user) {
   return jwt.sign(
     { id: user._id, email: user.email, is_admin: user.is_admin },
     JWT_SECRET,
-    { expiresIn: ACCESS_TTL }
+    { expiresIn: ACCESS_TTL },
   );
 }
 
@@ -45,7 +45,11 @@ router.post("/register", async (req, res) => {
     return res.status(422).json({ error: "Invalid email format." });
   }
   if (!password || password.length < MIN_PASSWORD_LEN) {
-    return res.status(422).json({ error: `Password must be at least ${MIN_PASSWORD_LEN} characters.` });
+    return res
+      .status(422)
+      .json({
+        error: `Password must be at least ${MIN_PASSWORD_LEN} characters.`,
+      });
   }
 
   const exists = await User.findOne({ $or: [{ email }, { username }] });
@@ -56,7 +60,7 @@ router.post("/register", async (req, res) => {
   await User.create({ username, email, password_hash: password });
 
   // TODO: send verification email with a signed JWT link
-  res.status(201).json({ message: "Account created. Check your email to verify." });
+  res.status(201).json({ message: "Account created." });
 });
 
 // POST /login
@@ -114,7 +118,7 @@ router.post("/refresh", async (req, res) => {
 router.post("/logout", authenticate, async (req, res) => {
   await RefreshToken.updateMany(
     { user_id: req.user.id, revoked: false },
-    { revoked: true }
+    { revoked: true },
   );
   res.json({ message: "Logged out." });
 });
@@ -135,7 +139,8 @@ router.post("/verify-email", async (req, res) => {
   }
 
   const user = await User.findById(payload.id);
-  if (!user) return res.status(400).json({ error: "Token expired or invalid." });
+  if (!user)
+    return res.status(400).json({ error: "Token expired or invalid." });
 
   if (!user.is_verified) {
     user.is_verified = true;
@@ -155,7 +160,7 @@ router.post("/forgot-password", async (req, res) => {
     const resetToken = jwt.sign(
       { id: user._id, purpose: "password_reset" },
       JWT_SECRET,
-      { expiresIn: "15m" }
+      { expiresIn: "15m" },
     );
     // TODO: send email with resetToken link
     console.info("Password reset token:", resetToken);
@@ -169,7 +174,11 @@ router.post("/reset-password", async (req, res) => {
   const { token, new_password } = req.body;
 
   if (!new_password || new_password.length < MIN_PASSWORD_LEN) {
-    return res.status(422).json({ error: `Password must be at least ${MIN_PASSWORD_LEN} characters.` });
+    return res
+      .status(422)
+      .json({
+        error: `Password must be at least ${MIN_PASSWORD_LEN} characters.`,
+      });
   }
 
   let payload;
@@ -184,7 +193,8 @@ router.post("/reset-password", async (req, res) => {
   }
 
   const user = await User.findById(payload.id);
-  if (!user) return res.status(400).json({ error: "Token expired or invalid." });
+  if (!user)
+    return res.status(400).json({ error: "Token expired or invalid." });
 
   user.password_hash = new_password;
   await user.save();

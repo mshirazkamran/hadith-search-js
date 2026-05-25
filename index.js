@@ -1,3 +1,4 @@
+import "dotenv/config.js";
 import express from "express";
 import mongoose from "mongoose";
 import { initEmbedder } from "./services/qdrantSearch.js";
@@ -10,6 +11,25 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
+// FastAPI-style access logger
+app.use((req, res, next) => {
+  const start = process.hrtime.bigint();
+  const remoteAddr =
+    req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
+    req.socket.remoteAddress ||
+    "-";
+  res.on("finish", () => {
+    const durationMs = Number(process.hrtime.bigint() - start) / 1e6;
+    const method = req.method;
+    const url = req.originalUrl || req.url;
+    const httpVersion = req.httpVersion;
+    const status = res.statusCode;
+    console.log(
+      `INFO:     ${remoteAddr} - "${method} ${url} HTTP/${httpVersion}" ${status} ${durationMs.toFixed(2)}ms`,
+    );
+  });
+  next();
+});
 
 app.use((req, res, next) => {
   const allowed = [
@@ -17,20 +37,22 @@ app.use((req, res, next) => {
     "http://localhost:3000",
     "http://localhost:5173",
   ];
-  
+
   const origin = req.headers.origin;
   if (allowed.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
 
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PATCH, DELETE, OPTIONS",
+  );
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   if (req.method === "OPTIONS") {
     return res.sendStatus(204);
   }
   next();
 });
-
 
 // Routes
 app.get("/", (req, res) => res.json({ status: "working" }));
@@ -41,7 +63,9 @@ app.use("/api/v1", searchRouter);
 // main error handler
 app.use((err, req, res, _next) => {
   console.error(err);
-  res.status(err.status || 500).json({ error: err.message || "Internal server error." });
+  res
+    .status(err.status || 500)
+    .json({ error: err.message || "Internal server error." });
 });
 
 async function start() {

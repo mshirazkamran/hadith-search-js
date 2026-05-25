@@ -1,10 +1,11 @@
 #!/bin/bash
 
-docker compose up -d;
+docker compose --env-file .env up -d;
 
 echo "Docker container started"
+sleep 5  # Give MongoDB time to initialize
 
-echo "Starrting Express App"
+echo "Starting Express App"
 
 node index.js
 
